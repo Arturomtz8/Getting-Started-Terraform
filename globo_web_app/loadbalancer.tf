@@ -1,3 +1,12 @@
+##################################################################################
+# DATA
+##################################################################################
+
+data "aws_elb_service_account" "root" {}
+
+##################################################################################
+# RESOURCES
+##################################################################################
 ## aws_lb
 resource "aws_lb" "nginx" {
   name               = "globo-web-alb"
@@ -7,6 +16,12 @@ resource "aws_lb" "nginx" {
   subnets            = [aws_subnet.subnet1.id, aws_subnet.subnet2.id]
 
   enable_deletion_protection = false
+
+  access_logs {
+    bucket  = aws_s3_bucket.web_bucket.bucket
+    prefix  = "alb-logs"
+    enabled = true
+  }
 
   tags = local.common_tags
 }
@@ -33,7 +48,7 @@ resource "aws_lb_listener" "nginx" {
     target_group_arn = aws_lb_target_group.nginx.arn
   }
 
- tags = local.common_tags
+  tags = local.common_tags
 }
 
 # aws_lb_target_group_attachment
