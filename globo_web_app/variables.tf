@@ -61,3 +61,9 @@ variable "ec2_instances_count" {
   description = "Number of ec2 instances to be launched"
   default     = 2
 }
+
+variable "naming_prefix" {
+  type = string
+  description = "Naming prefix for all resources"
+  default = "globoweb"
+}

@@ -19,23 +19,23 @@ resource "aws_vpc" "vpc" {
   cidr_block           = var.vpc_cidr_block
   enable_dns_hostnames = var.enable_dns_hostnames
 
-  tags = local.common_tags
+  tags = merge(local.common_tags, {Name: "${local.name_prefix}-vpc"})
 }
 
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.vpc.id
 
-  tags = local.common_tags
+  tags = merge(local.common_tags, { Name: "${local.name_prefix}-igw"})
 }
 
 resource "aws_subnet" "subnets" {
   count                   = var.vpc_subnet_count
-  cidr_block              = var.vpc_subnets_cidr_block[count.index]
+  cidr_block              = cidrsubnet(var.vpc_cidr_block, 8, count.index)
   vpc_id                  = aws_vpc.vpc.id
   map_public_ip_on_launch = var.map_public_ip_on_launch
   availability_zone       = data.aws_availability_zones.available.names[count.index]
 
-  tags = local.common_tags
+  tags = merge(local.common_tags, {Name: "${local.name_prefix}-subnet-${count.index}"})
 }
 
 
@@ -48,7 +48,7 @@ resource "aws_route_table" "rtb" {
     gateway_id = aws_internet_gateway.igw.id
   }
 
-  tags = local.common_tags
+  tags = merge(local.common_tags, {Name: "${local.name_prefix}-rtb"})
 }
 
 resource "aws_route_table_association" "rta_subnets" {
@@ -79,12 +79,12 @@ resource "aws_security_group" "nginx_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = local.common_tags
+  tags = merge(local.common_tags, {Name: "${local.name_prefix}-nginx-sg"})
 }
 
 # Load balancer security group 
 resource "aws_security_group" "alb_sg" {
-  name   = "nginx_alb_sg"
+  name   = "${local.name_prefix}-nginx_alb_sg"
   vpc_id = aws_vpc.vpc.id
 
   # HTTP access from anywhere
@@ -104,6 +104,5 @@ resource "aws_security_group" "alb_sg" {
   }
 
   tags = local.common_tags
+  
 }
-
-
