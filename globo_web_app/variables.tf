@@ -49,3 +49,15 @@ variable "billing_code" {
   type        = string
   description = "Billing code for resource tagging"
 }
+
+variable "vpc_subnet_count" {
+  type        = number
+  description = "Number of subnets to create"
+  default     = 2
+}
+
+variable "ec2_instances_count" {
+  type        = number
+  description = "Number of ec2 instances to be launched"
+  default     = 2
+}
