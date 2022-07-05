@@ -63,7 +63,7 @@ variable "ec2_instances_count" {
 }
 
 variable "naming_prefix" {
-  type = string
+  type        = string
   description = "Naming prefix for all resources"
-  default = "globoweb"
+  default     = "globoweb"
 }
