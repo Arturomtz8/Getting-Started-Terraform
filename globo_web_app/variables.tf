@@ -11,9 +11,8 @@ variable "enable_dns_hostnames" {
 }
 
 variable "vpc_cidr_block" {
-  type        = string
+  type        = map(string)
   description = "Base CIDR Block for VPC"
-  default     = "10.0.0.0/16"
 }
 
 variable "vpc_subnets_cidr_block" {
@@ -29,9 +28,8 @@ variable "map_public_ip_on_launch" {
 }
 
 variable "instance_type" {
-  type        = string
+  type        = map(string)
   description = "Type for EC2 Instnace"
-  default     = "t2.micro"
 }
 
 variable "company" {
@@ -51,15 +49,13 @@ variable "billing_code" {
 }
 
 variable "vpc_subnet_count" {
-  type        = number
+  type        = map(number)
   description = "Number of subnets to create"
-  default     = 2
 }
 
 variable "ec2_instances_count" {
-  type        = number
+  type        = map(number)
   description = "Number of ec2 instances to be launched"
-  default     = 2
 }
 
 variable "naming_prefix" {
